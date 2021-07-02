@@ -78,12 +78,10 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 
-const displayMovements = function (movements, sort = false) {
+const displayMovements = function (mov) {
   containerMovements.innerHTML = '';
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
-
-  movs.forEach(function (mov, i) {
+  mov.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -98,12 +96,13 @@ const displayMovements = function (movements, sort = false) {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
+displayMovements(account1.movements)
 
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
   labelBalance.textContent = `${acc.balance}€`;
 };
-
+calcDisplayBalance(account1)
 const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
@@ -125,3 +124,4 @@ const calcDisplaySummary = function (acc) {
     .reduce((acc, int) => acc + int, 0);
   labelSumInterest.textContent = `${interest}€`;
 };
+calcDisplaySummary(account1)
