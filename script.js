@@ -41,6 +41,7 @@ const account2 = {
 };
 
 const accounts = [account1, account2];
+accounts.forEa
 
 /////////////////////////////////////////////////
 // Elements
@@ -72,10 +73,10 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // Functions
 
-const displayMovements = function (movements, sort = false) {
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort ? acc.movements.slice().sort((a, b) => a - b) : acc.movements;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
@@ -132,7 +133,7 @@ createUsernames(accounts);
 
 const updateUI = function (acc) {
   // Display movements
-  displayMovements(acc.movements);
+  displayMovements(acc);
 
   // Display balance
   calcDisplayBalance(acc);
@@ -142,17 +143,22 @@ const updateUI = function (acc) {
 };
 
 ///////////////////////////////////////
-// Event handlers
 let currentAccount;
 
 btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
 
+  const now = new Date()
+  const day = `${now.getDate()}`.padStart(2,0)
+  const month = `${now.getMonth()+1}`.padStart(2,0)
+  const year = now.getFullYear()
+
+  labelDate.innerText = `${day}/${month}/${year}`
+
   currentAccount = accounts.find(
     acc => acc.username === inputLoginUsername.value
   );
-  console.log(currentAccount);
 
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     // Display UI and message
@@ -218,14 +224,13 @@ btnClose.addEventListener('click', function (e) {
     const index = accounts.findIndex(
       acc => acc.username === currentAccount.username
     );
-    console.log(index);
-    // .indexOf(23)
 
     // Delete account
     accounts.splice(index, 1);
 
     // Hide UI
     containerApp.style.opacity = 0;
+    labelWelcome.innerText = 'Log in to get started'
   }
 
   inputCloseUsername.value = inputClosePin.value = '';
@@ -234,6 +239,6 @@ btnClose.addEventListener('click', function (e) {
 let sorted = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
+  displayMovements(currentAccount, !sorted);
   sorted = !sorted;
 });
