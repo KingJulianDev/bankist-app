@@ -41,8 +41,116 @@ const account2 = {
 };
 
 const accounts = [account1, account2];
-accounts.forEa
 
+const users = []
+
+/* -----SIGN IN----- */
+const signinModal = document.querySelector('.modal-sign')
+const passInputSign = document.querySelector('.signin__input--pin')
+const confirmPassInput = document.querySelector('.signin__input--pin-confirm')
+const usernameInputSign = document.querySelector('.signin__input--user')
+const signinModalBtn = document.querySelector('.modal__btn-sign')
+const signInBtn = document.querySelector('.authorization__sign-in')
+const signModalClose = document.querySelector('.modal-sign__close')
+
+signModalClose.onclick = () => {  //CLOSE SIGN IN MODAL
+  signinModal.style.display = 'none'
+  console.log(signinModal.style.display)
+}
+
+signInBtn.onclick = () => { //SHOW SIGN IN MODAL
+  signinModal.style.display = 'block'
+}
+
+signinModalBtn.addEventListener('click', function(e){   //IF ALL INPUTS ARE CORRECT, CALL createNewUser() FUNCTION
+  e.preventDefault()
+  checkIsDataCorrect()
+  if(passInputSign.value && 
+    confirmPassInput.value && 
+    confirmPassInput.value === passInputSign.value && 
+    !users.find(users => users.owner === usernameInputSign.value)){
+
+    createNewUser()
+  }
+})
+
+function checkIsDataCorrect(){    //CHECK ARE INPUTS CORRECT
+  if(confirmPassInput.value !== passInputSign.value){
+    passInputSign.classList.add('input--wrong')
+    confirmPassInput.classList.add('input--wrong')
+  }
+  
+  if(users.find(users => users.owner === usernameInputSign.value)){
+    usernameInputSign.classList.add('input--wrong')
+  }
+
+}
+
+function resetSignModal(){
+  passInputSign.classList.remove('input--wrong')
+  confirmPassInput.classList.remove('input--wrong')
+  usernameInputSign.classList.remove('input--wrong')
+  passInputSign.value = ''
+  confirmPassInput.value = ''
+  usernameInputSign.value = ''
+  signinModal.style.display = 'none'
+}
+
+function createNewUser(){
+  const user = {
+    owner: document.querySelector('.signin__input--user').value,
+    pin: Number(document.querySelector('.signin__input--pin').value),
+    movements: [],
+    interestRate: 0,
+    movementsDates: [],
+    currency: '',
+    locale: ''
+  }
+
+  users.push(user)
+  resetSignModal()
+  console.log(users)
+}
+
+/* -----LOG IN----- */
+const loginModal = document.querySelector('.modal-log')
+const passInputLog = document.querySelector('.login__input--pin')
+const usernameInputLog = document.querySelector('.login__input--user')
+const loginModalBtn = document.querySelector('.modal__btn-log')
+const logInBtn = document.querySelector('.authorization__log-in')
+const logModalClose = document.querySelector('.modal-log__close')
+let currentUser
+
+logInBtn.onclick = () => {  //SHOW LOG IN MODAL
+  loginModal.style.display = 'block'
+}
+
+logModalClose.onclick = () => { //CLOSE LOG IN MODAL
+  loginModal.style.display = 'none' 
+}
+
+loginModalBtn.addEventListener('click', function(e){
+  e.preventDefault()
+
+  currentUser = users.find(user => user.owner === usernameInputLog.value)
+  console.log(currentUser)
+
+  if(currentUser.pin === Number(passInputLog.value)){   //CHECK IS THE PASSWORD CORRECT
+    resetLogModal()
+    containerApp.style.opacity = 100
+  }else{
+    passInputLog.classList.add('input--wrong')
+    usernameInputLog.classList.add('input--wrong')
+  }
+})
+
+function resetLogModal(){
+  passInputLog.classList.remove('input--wrong')
+  usernameInputLog.classList.remove('input--wrong')
+  passInputLog.value = ''
+  usernameInputLog.value = ''
+  loginModal.style.display = 'none'
+}
 /////////////////////////////////////////////////
 // Elements
 const labelWelcome = document.querySelector('.welcome');
@@ -167,9 +275,9 @@ const updateUI = function (acc) {
 };
 
 ///////////////////////////////////////
-let currentAccount;
+// let currentAccount;
 
-btnLogin.addEventListener('click', function (e) {
+/* btnLogin.addEventListener('click', function (e) {
   // Prevent form from submitting
   e.preventDefault();
 
@@ -193,7 +301,7 @@ btnLogin.addEventListener('click', function (e) {
     // Update UI
     updateUI(currentAccount);
   }
-});
+}); */
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();

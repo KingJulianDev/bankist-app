@@ -242,7 +242,7 @@
   }
   /* End exceptions */
   
-  .form__input {
+  /* .form__input {
     width: 100%;
     border: none;
     background-color: rgba(255, 255, 255, 0.4);
@@ -253,7 +253,7 @@
     padding: 0.3rem 1rem;
     border-radius: 0.7rem;
     transition: all 0.3s;
-  }
+  } */
   
   .form__input:focus {
     outline: none;
@@ -299,9 +299,10 @@
     border: 2px solid #000;
     border-radius: 2rem;
     background-color: white;
+    display: none;
   }
 
-  .modal__close{
+  .modal-sign__close, .modal-log__close{
     position: absolute;
     top: 10px;
     right: 15px;
@@ -317,18 +318,28 @@
     justify-content: center;
   }
 
-  .login__input, .signin__input{
+  .form__input{
     padding: 0.5rem 2rem;
     font-size: 1.6rem;
     font-family: inherit;
     text-align: center;
-    border-radius: 10rem;
+    border: none;
+    border-radius: 0.7rem;
     transition: all 0.3s;
-    border: 1px solid #000;
     display: block;
-    width: 80%;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .form__input-modal{
+    border: 1px solid #000;
+    border-radius: 7rem;
     margin-bottom: 20px;
-    background-color: #f3f3f3;
+    width: 80%;
+  }
+
+  .input--wrong{
+    border-color: red;
   }
 
   .login__input:focus, .signin__input:focus {
