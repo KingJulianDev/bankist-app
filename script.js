@@ -42,7 +42,47 @@ const account2 = {
 
 const accounts = [account1, account2];
 
-const users = []
+const users = [
+  {
+    currency: "",
+    interestRate: 0,
+    locale: "",
+    movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
+
+    movementsDates: [
+      '2021-05-08T21:31:17.178Z',
+      '2021-07-05T07:42:02.383Z',
+      '2021-01-28T09:15:04.904Z',
+      '2021-04-01T10:17:24.185Z',
+      '2021-07-09T14:11:59.604Z',
+      '2021-05-27T17:01:17.194Z',
+      '2021-06-11T23:36:17.929Z',
+      '2021-07-10T10:51:36.790Z',
+    ],
+
+    owner: "julian",
+    pin: 1234
+  },
+
+  {
+    currency: "",
+    interestRate: 0,
+    locale: "",
+    movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+    movementsDates: [
+      '2021-05-01T13:15:33.035Z',
+      '2021-06-30T09:48:16.867Z',
+      '2021-04-25T06:04:23.907Z',
+      '2021-01-25T14:18:46.235Z',
+      '2021-02-05T16:33:06.386Z',
+      '2021-04-10T14:43:26.374Z',
+      '2021-06-25T18:49:59.371Z',
+      '2021-06-26T12:01:20.894Z',
+    ],
+    owner: "marty",
+    pin: 4321
+  }
+]
 
 /* -----SIGN IN----- */
 const signinModal = document.querySelector('.modal-sign')
@@ -138,6 +178,7 @@ loginModalBtn.addEventListener('click', function(e){
   if(currentUser.pin === Number(passInputLog.value)){   //CHECK IS THE PASSWORD CORRECT
     resetLogModal()
     containerApp.style.opacity = 100
+    updateUI(currentUser)
   }else{
     passInputLog.classList.add('input--wrong')
     usernameInputLog.classList.add('input--wrong')
@@ -184,7 +225,6 @@ function formatMovementDate(date){
   const calcDaysPassed = (date1, date2) => Math.abs(date2-date1) / (1000 * 60 * 60 * 24)
   // const now = new Date(date)
   const daysPassed = Math.floor(calcDaysPassed(new Date(), date))
-  console.log(daysPassed)
 
   /* OWN ATTEMPT */
   if(daysPassed === 0 ){
@@ -305,26 +345,31 @@ const updateUI = function (acc) {
 
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
+  console.log(currentUser)
   const amount = Number(inputTransferAmount.value);
-  const receiverAcc = accounts.find(
-    acc => acc.username === inputTransferTo.value
+  const receiverAcc = users.find(
+    acc => acc.owner === inputTransferTo.value
   );
+  console.log(receiverAcc)
   inputTransferAmount.value = inputTransferTo.value = '';
 
   if (
     amount > 0 &&
     receiverAcc &&
-    currentAccount.balance >= amount &&
-    receiverAcc?.username !== currentAccount.username
+    currentUser.balance >= amount &&
+    receiverAcc?.owner !== currentUser.owner
   ) {
+    console.log('transer accepted')
     // Doing the transfer
-    currentAccount.movements.push(-amount);
-    currentAccount.movementsDates.push(new Date().toISOString()) // own attempt
+    currentUser.movements.push(-amount);
+    currentUser.movementsDates.push(new Date().toISOString()) // own attempt
     receiverAcc.movementsDates.push(new Date().toISOString()) // own attempt
     receiverAcc.movements.push(amount);
 
     // Update UI
-    updateUI(currentAccount);
+    updateUI(currentUser);
+  }else{
+    console.log('transer declined')
   }
 });
 
@@ -333,13 +378,13 @@ btnLoan.addEventListener('click', function (e) {
 
   const amount = Number(inputLoanAmount.value);
 
-  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+  if (amount > 0 && currentUser.movements.some(mov => mov >= amount * 0.1)) {
     // Add movement
-    currentAccount.movements.push(amount);
-    currentAccount.movementsDates.push(new Date().toISOString())//own attempt
+    currentUser.movements.push(amount);
+    currentUser.movementsDates.push(new Date().toISOString())//own attempt
 
     // Update UI
-    updateUI(currentAccount);
+    updateUI(currentUser);
   }
   inputLoanAmount.value = '';
 });
@@ -348,15 +393,12 @@ btnClose.addEventListener('click', function (e) {
   e.preventDefault();
 
   if (
-    inputCloseUsername.value === currentAccount.username &&
-    Number(inputClosePin.value) === currentAccount.pin
+    inputCloseUsername.value === currentUser.owner &&
+    Number(inputClosePin.value) === currentUser.pin
   ) {
-    const index = accounts.findIndex(
-      acc => acc.username === currentAccount.username
-    );
-
     // Delete account
-    accounts.splice(index, 1);
+    const index = users.findIndex(user => user.owner === inputCloseUsername.value)
+    users.splice(index, 1)
 
     // Hide UI
     containerApp.style.opacity = 0;
@@ -369,6 +411,6 @@ btnClose.addEventListener('click', function (e) {
 let sorted = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
-  displayMovements(currentAccount, !sorted);
+  displayMovements(currentUser, !sorted);
   sorted = !sorted;
 });
