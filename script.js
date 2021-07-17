@@ -181,6 +181,7 @@ loginModalBtn.addEventListener('click', function(e){
     updateUI(currentUser)
     labelWelcome.innerHTML = `Welcome back, ${currentUser.owner}`
     labelDate.innerHTML = new Intl.DateTimeFormat(currentUser.locale).format(new Date())
+    logoutTimer()
   }else{
     passInputLog.classList.add('input--wrong')
     usernameInputLog.classList.add('input--wrong')
@@ -223,6 +224,37 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 // Functions
+/* function timer(){
+  let time = 30 
+
+  setInterval(function(){  
+    const min = String(Math.trunc(time / 60)).padStart(2,0)
+    const sec = String(time % 60).padStart(2,0)
+
+    labelTimer.innerHTML = `${min}:${sec}`
+    time--
+  },1000)
+} */
+
+const logoutTimer = function(){
+  
+  let time = 30
+
+  const timer = setInterval(function(){
+    const min = String(Math.trunc(time/60)).padStart(2,0)
+    const sec = String(time % 60).padStart(2,0)
+
+    time--
+    labelTimer.innerHTML = `${min}:${sec}`
+
+    if(time === 0){
+      containerApp.style.opacity = 0;
+      labelWelcome.innerText = 'Log in to get started'
+      clearInterval(timer)
+    }
+  },1000)
+}
+
 function formatMovementDate(date){
   const calcDaysPassed = (date1, date2) => Math.abs(date2-date1) / (1000 * 60 * 60 * 24)
   const daysPassed = Math.floor(calcDaysPassed(new Date(), date))
@@ -289,17 +321,6 @@ const calcDisplaySummary = function (acc) {
     .reduce((acc, int) => acc + int, 0);
   labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
-
-/* const createUsernames = function (accs) {
-  accs.forEach(function (acc) {
-    acc.username = acc.owner
-      .toLowerCase()
-      .split(' ')
-      .map(name => name[0])
-      .join('');
-  });
-};
-createUsernames(accounts); */
 
 const updateUI = function (acc) {   //UPDATING UI
   // Display movements
