@@ -115,7 +115,8 @@ const usernameInputLog = document.querySelector('.login__input--user')
 const loginModalBtn = document.querySelector('.modal__btn-log')
 const logInBtn = document.querySelector('.authorization__log-in')
 const logModalClose = document.querySelector('.modal-log__close')
-let currentUser
+
+let currentUser,timer
 
 logInBtn.onclick = () => {  //SHOW LOG IN MODAL
   loginModal.style.display = 'block'
@@ -136,7 +137,10 @@ loginModalBtn.addEventListener('click', function(e){
     updateUI(currentUser)
     labelWelcome.innerHTML = `Welcome back, ${currentUser.owner}`
     labelDate.innerHTML = new Intl.DateTimeFormat(currentUser.locale).format(new Date())
-    logoutTimer()
+
+    //CLEAR INTERVAL IF IT EXISTS
+    if(timer) clearInterval(timer)
+    timer = logoutTimer()
   }else{
     passInputLog.classList.add('input--wrong')
     usernameInputLog.classList.add('input--wrong')
@@ -195,10 +199,11 @@ const logoutTimer = function () {
     time--;
   };
 
-  let time = 10;
+  let time = 60;
 
   tick();
   const timer = setInterval(tick, 1000);
+  return timer
 };
 
 function formatMovementDate(date){
