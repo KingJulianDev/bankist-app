@@ -1,6 +1,6 @@
 'use strict';
 
-const account1 = {
+/* const account1 = {
   owner: 'Jonas Schmedtmann',
   movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
   interestRate: 1.2, // %
@@ -40,13 +40,13 @@ const account2 = {
   locale: 'en-US',
 };
 
-const accounts = [account1, account2];
+const accounts = [account1, account2]; */
 
 const users = [
   {
     currency: "",
-    interestRate: 0,
-    locale: "",
+    interestRate: 1.2,
+    locale: "en-GB",
     movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
 
     movementsDates: [
@@ -66,8 +66,8 @@ const users = [
 
   {
     currency: "",
-    interestRate: 0,
-    locale: "",
+    interestRate: 1.5,
+    locale: "de-DE",
     movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
     movementsDates: [
       '2021-05-01T13:15:33.035Z',
@@ -144,7 +144,7 @@ function createNewUser(){
     interestRate: 0,
     movementsDates: [],
     currency: '',
-    locale: ''
+    locale: navigator.language
   }
 
   users.push(user)
@@ -179,6 +179,8 @@ loginModalBtn.addEventListener('click', function(e){
     resetLogModal()
     containerApp.style.opacity = 100
     updateUI(currentUser)
+    labelWelcome.innerHTML = `Welcome back, ${currentUser.owner}`
+    labelDate.innerHTML = new Intl.DateTimeFormat(currentUser.locale).format(new Date())
   }else{
     passInputLog.classList.add('input--wrong')
     usernameInputLog.classList.add('input--wrong')
@@ -223,7 +225,6 @@ const inputClosePin = document.querySelector('.form__input--pin');
 // Functions
 function formatMovementDate(date){
   const calcDaysPassed = (date1, date2) => Math.abs(date2-date1) / (1000 * 60 * 60 * 24)
-  // const now = new Date(date)
   const daysPassed = Math.floor(calcDaysPassed(new Date(), date))
 
   /* OWN ATTEMPT */
@@ -234,10 +235,7 @@ function formatMovementDate(date){
   } else if(daysPassed <= 7 ) {
     return 'Last week'
   }else{
-    const day = `${date.getDate()}`.padStart(2,0)
-    const month = `${date.getMonth()+1}`.padStart(2,0)
-    const year = date.getFullYear()
-    return `${day}/${month}/${year}`
+    return new Intl.DateTimeFormat(currentUser.locale).format(new Date(date))
   }
 }
 
@@ -292,7 +290,7 @@ const calcDisplaySummary = function (acc) {
   labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
-const createUsernames = function (accs) {
+/* const createUsernames = function (accs) {
   accs.forEach(function (acc) {
     acc.username = acc.owner
       .toLowerCase()
@@ -301,9 +299,9 @@ const createUsernames = function (accs) {
       .join('');
   });
 };
-createUsernames(accounts);
+createUsernames(accounts); */
 
-const updateUI = function (acc) {
+const updateUI = function (acc) {   //UPDATING UI
   // Display movements
   displayMovements(acc);
 
@@ -314,36 +312,7 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 
-///////////////////////////////////////
-// let currentAccount;
-
-/* btnLogin.addEventListener('click', function (e) {
-  // Prevent form from submitting
-  e.preventDefault();
-
-  labelDate.innerText = formatMovementDate(new Date())
-
-  currentAccount = accounts.find(
-    acc => acc.username === inputLoginUsername.value
-  );
-
-  if (currentAccount?.pin === Number(inputLoginPin.value)) {
-    // Display UI and message
-    labelWelcome.textContent = `Welcome back, ${
-      currentAccount.owner.split(' ')[0]
-    }`;
-    containerApp.style.opacity = 100;
-
-    // Clear input fields
-    inputLoginUsername.value = inputLoginPin.value = '';
-    inputLoginPin.blur();
-
-    // Update UI
-    updateUI(currentAccount);
-  }
-}); */
-
-btnTransfer.addEventListener('click', function (e) {
+btnTransfer.addEventListener('click', function (e) {    //TRANSFER TO ANOTHER USER
   e.preventDefault();
   console.log(currentUser)
   const amount = Number(inputTransferAmount.value);
@@ -359,7 +328,6 @@ btnTransfer.addEventListener('click', function (e) {
     currentUser.balance >= amount &&
     receiverAcc?.owner !== currentUser.owner
   ) {
-    console.log('transer accepted')
     // Doing the transfer
     currentUser.movements.push(-amount);
     currentUser.movementsDates.push(new Date().toISOString()) // own attempt
@@ -368,17 +336,15 @@ btnTransfer.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentUser);
-  }else{
-    console.log('transer declined')
   }
 });
 
-btnLoan.addEventListener('click', function (e) {
+btnLoan.addEventListener('click', function (e) {    //ADD INCOME 
   e.preventDefault();
 
   const amount = Number(inputLoanAmount.value);
 
-  if (amount > 0 && currentUser.movements.some(mov => mov >= amount * 0.1)) {
+  if (amount > 0) {
     // Add movement
     currentUser.movements.push(amount);
     currentUser.movementsDates.push(new Date().toISOString())//own attempt
@@ -389,7 +355,7 @@ btnLoan.addEventListener('click', function (e) {
   inputLoanAmount.value = '';
 });
 
-btnClose.addEventListener('click', function (e) {
+btnClose.addEventListener('click', function (e) {   //CLOSE USER`S ACCOUNT
   e.preventDefault();
 
   if (
