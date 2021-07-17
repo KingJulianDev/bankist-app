@@ -1,47 +1,5 @@
 'use strict';
 
-/* const account1 = {
-  owner: 'Jonas Schmedtmann',
-  movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
-  interestRate: 1.2, // %
-  pin: 1111,
-
-  movementsDates: [
-    '2021-05-08T21:31:17.178Z',
-    '2021-07-05T07:42:02.383Z',
-    '2021-01-28T09:15:04.904Z',
-    '2021-04-01T10:17:24.185Z',
-    '2021-07-09T14:11:59.604Z',
-    '2021-05-27T17:01:17.194Z',
-    '2021-06-11T23:36:17.929Z',
-    '2021-07-10T10:51:36.790Z',
-  ],
-  currency: 'EUR',
-  locale: 'pt-PT', // de-DE
-};
-
-const account2 = {
-  owner: 'Jessica Davis',
-  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
-  interestRate: 1.5,
-  pin: 2222,
-
-  movementsDates: [
-    '2021-05-01T13:15:33.035Z',
-    '2021-06-30T09:48:16.867Z',
-    '2021-04-25T06:04:23.907Z',
-    '2021-01-25T14:18:46.235Z',
-    '2021-02-05T16:33:06.386Z',
-    '2021-04-10T14:43:26.374Z',
-    '2021-06-25T18:49:59.371Z',
-    '2021-06-26T12:01:20.894Z',
-  ],
-  currency: 'USD',
-  locale: 'en-US',
-};
-
-const accounts = [account1, account2]; */
-
 const users = [
   {
     currency: "",
@@ -95,7 +53,6 @@ const signModalClose = document.querySelector('.modal-sign__close')
 
 signModalClose.onclick = () => {  //CLOSE SIGN IN MODAL
   signinModal.style.display = 'none'
-  console.log(signinModal.style.display)
 }
 
 signInBtn.onclick = () => { //SHOW SIGN IN MODAL
@@ -149,7 +106,6 @@ function createNewUser(){
 
   users.push(user)
   resetSignModal()
-  console.log(users)
 }
 
 /* -----LOG IN----- */
@@ -173,7 +129,6 @@ loginModalBtn.addEventListener('click', function(e){
   e.preventDefault()
 
   currentUser = users.find(user => user.owner === usernameInputLog.value)
-  console.log(currentUser)
 
   if(currentUser.pin === Number(passInputLog.value)){   //CHECK IS THE PASSWORD CORRECT
     resetLogModal()
@@ -224,42 +179,32 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 /////////////////////////////////////////////////
 // Functions
-/* function timer(){
-  let time = 30 
 
-  setInterval(function(){  
-    const min = String(Math.trunc(time / 60)).padStart(2,0)
-    const sec = String(time % 60).padStart(2,0)
+const logoutTimer = function () {
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
 
-    labelTimer.innerHTML = `${min}:${sec}`
-    time--
-  },1000)
-} */
+    labelTimer.textContent = `${min}:${sec}`;
 
-const logoutTimer = function(){
-  
-  let time = 30
-
-  const timer = setInterval(function(){
-    const min = String(Math.trunc(time/60)).padStart(2,0)
-    const sec = String(time % 60).padStart(2,0)
-
-    time--
-    labelTimer.innerHTML = `${min}:${sec}`
-
-    if(time === 0){
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = 'Log in to get started';
       containerApp.style.opacity = 0;
-      labelWelcome.innerText = 'Log in to get started'
-      clearInterval(timer)
     }
-  },1000)
-}
+    time--;
+  };
+
+  let time = 10;
+
+  tick();
+  const timer = setInterval(tick, 1000);
+};
 
 function formatMovementDate(date){
   const calcDaysPassed = (date1, date2) => Math.abs(date2-date1) / (1000 * 60 * 60 * 24)
   const daysPassed = Math.floor(calcDaysPassed(new Date(), date))
 
-  /* OWN ATTEMPT */
   if(daysPassed === 0 ){
     return 'Today'
   }else if(daysPassed === 1 ){
@@ -335,12 +280,10 @@ const updateUI = function (acc) {   //UPDATING UI
 
 btnTransfer.addEventListener('click', function (e) {    //TRANSFER TO ANOTHER USER
   e.preventDefault();
-  console.log(currentUser)
   const amount = Number(inputTransferAmount.value);
   const receiverAcc = users.find(
     acc => acc.owner === inputTransferTo.value
   );
-  console.log(receiverAcc)
   inputTransferAmount.value = inputTransferTo.value = '';
 
   if (
@@ -351,8 +294,8 @@ btnTransfer.addEventListener('click', function (e) {    //TRANSFER TO ANOTHER US
   ) {
     // Doing the transfer
     currentUser.movements.push(-amount);
-    currentUser.movementsDates.push(new Date().toISOString()) // own attempt
-    receiverAcc.movementsDates.push(new Date().toISOString()) // own attempt
+    currentUser.movementsDates.push(new Date().toISOString()) 
+    receiverAcc.movementsDates.push(new Date().toISOString()) 
     receiverAcc.movements.push(amount);
 
     // Update UI
@@ -368,7 +311,7 @@ btnLoan.addEventListener('click', function (e) {    //ADD INCOME
   if (amount > 0) {
     // Add movement
     currentUser.movements.push(amount);
-    currentUser.movementsDates.push(new Date().toISOString())//own attempt
+    currentUser.movementsDates.push(new Date().toISOString())
 
     // Update UI
     updateUI(currentUser);
