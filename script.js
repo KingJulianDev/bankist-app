@@ -4,7 +4,7 @@ const users = [
   {
     currency: "",
     interestRate: 1.2,
-    locale: "en-GB",
+    locale: "ru-RU",
     movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
 
     movementsDates: [
@@ -306,6 +306,10 @@ btnTransfer.addEventListener('click', function (e) {    //TRANSFER TO ANOTHER US
     // Update UI
     updateUI(currentUser);
   }
+
+    // RESET TIMER 
+    clearInterval(timer)
+    timer = logoutTimer()
 });
 
 btnLoan.addEventListener('click', function (e) {    //ADD INCOME 
@@ -322,6 +326,10 @@ btnLoan.addEventListener('click', function (e) {    //ADD INCOME
     updateUI(currentUser);
   }
   inputLoanAmount.value = '';
+
+  // RESET TIMER 
+    clearInterval(timer)
+    timer = logoutTimer()
 });
 
 btnClose.addEventListener('click', function (e) {   //CLOSE USER`S ACCOUNT
