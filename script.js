@@ -19,7 +19,7 @@ const users = [
     ],
 
     owner: "julian",
-    pin: 1234
+    pin: 1111
   },
 
   {
@@ -37,59 +37,35 @@ const users = [
       '2021-06-25T18:49:59.371Z',
       '2021-06-26T12:01:20.894Z',
     ],
-    owner: "marty",
-    pin: 4321
+    owner: "alex",
+    pin: 2222
   }
 ]
 
+let currentUser,timer
 /* -----SIGN IN----- */
 const signinModal = document.querySelector('.modal-sign')
-const passInputSign = document.querySelector('.signin__input--pin')
-const confirmPassInput = document.querySelector('.signin__input--pin-confirm')
-const usernameInputSign = document.querySelector('.signin__input--user')
-const signinModalBtn = document.querySelector('.modal__btn-sign')
-const signInBtn = document.querySelector('.authorization__sign-in')
 const signModalClose = document.querySelector('.modal-sign__close')
 
-signModalClose.onclick = () => {  //CLOSE SIGN IN MODAL
-  signinModal.style.display = 'none'
-}
-
-signInBtn.onclick = () => { //SHOW SIGN IN MODAL
-  signinModal.style.display = 'block'
-}
-
-signinModalBtn.addEventListener('click', function(e){   //IF ALL INPUTS ARE CORRECT, CALL createNewUser() FUNCTION
-  e.preventDefault()
-  checkIsDataCorrect()
-  if(passInputSign.value && 
-    confirmPassInput.value && 
-    confirmPassInput.value === passInputSign.value && 
-    !users.find(users => users.owner === usernameInputSign.value)){
-
-    createNewUser()
-  }
-})
-
 function checkIsDataCorrect(){    //CHECK ARE INPUTS CORRECT
-  if(confirmPassInput.value !== passInputSign.value){
-    passInputSign.classList.add('input--wrong')
-    confirmPassInput.classList.add('input--wrong')
+  if(inputConfirmPass.value !== inputPassSign.value){
+    inputPassSign.classList.add('input--wrong')
+    inputConfirmPass.classList.add('input--wrong')
   }
   
-  if(users.find(users => users.owner === usernameInputSign.value)){
-    usernameInputSign.classList.add('input--wrong')
+  if(users.find(users => users.owner === inputUsernameSign.value)){
+    inputUsernameSign.classList.add('input--wrong')
   }
 
 }
 
 function resetSignModal(){
-  passInputSign.classList.remove('input--wrong')
-  confirmPassInput.classList.remove('input--wrong')
-  usernameInputSign.classList.remove('input--wrong')
-  passInputSign.value = ''
-  confirmPassInput.value = ''
-  usernameInputSign.value = ''
+  inputPassSign.classList.remove('input--wrong')
+  inputConfirmPass.classList.remove('input--wrong')
+  inputUsernameSign.classList.remove('input--wrong')
+  inputPassSign.value = ''
+  inputConfirmPass.value = ''
+  inputUsernameSign.value = ''
   signinModal.style.display = 'none'
 }
 
@@ -108,31 +84,68 @@ function createNewUser(){
   resetSignModal()
 }
 
+/////////////////////////////////////////////////
+// Elements
+const labelWelcome = document.querySelector('.welcome')
+const labelDate = document.querySelector('.date')
+const labelBalance = document.querySelector('.balance__value')
+const labelSumIn = document.querySelector('.summary__value--in')
+const labelSumOut = document.querySelector('.summary__value--out')
+const labelSumInterest = document.querySelector('.summary__value--interest')
+const labelTimer = document.querySelector('.timer')
+
+const containerApp = document.querySelector('.app')
+const containerMovements = document.querySelector('.movements')
+
+const btnLogin = document.querySelector('.login__btn')
+const btnTransfer = document.querySelector('.form__btn--transfer')
+const btnLoan = document.querySelector('.form__btn--loan')
+const btnClose = document.querySelector('.form__btn--close')
+const btnSort = document.querySelector('.btn--sort')
+const btnSignInModal = document.querySelector('.signin-modal')
+const btnSignin = document.querySelector('.modal__btn-sign')
+
+const inputLoginUsername = document.querySelector('.login__input--user')
+const inputLoginPin = document.querySelector('.login__input--pin')
+const inputTransferTo = document.querySelector('.form__input--to')
+const inputTransferAmount = document.querySelector('.form__input--amount')
+const inputLoanAmount = document.querySelector('.form__input--loan-amount')
+const inputCloseUsername = document.querySelector('.form__input--user')
+const inputClosePin = document.querySelector('.form__input--pin')
+const inputPassSign = document.querySelector('.signin__input--pin')
+const inputConfirmPass = document.querySelector('.signin__input--pin-confirm')
+const inputUsernameSign = document.querySelector('.signin__input--user')
+
+/////////////////////////////////////////////////
+// Functions
+/* -----SIGN IN----- */
+signModalClose.onclick = () => {  //CLOSE SIGN IN MODAL
+  signinModal.style.display = 'none'
+}
+
+btnSignInModal.onclick = () => { //SHOW SIGN IN MODAL
+  signinModal.style.display = 'block'
+}
+
+btnSignin.addEventListener('click', function(e){   //IF ALL INPUTS ARE CORRECT, CALL createNewUser() FUNCTION
+  e.preventDefault()
+  checkIsDataCorrect()
+  if(inputPassSign.value && 
+    inputConfirmPass.value && 
+    inputConfirmPass.value === inputPassSign.value && 
+    !users.find(users => users.owner === inputUsernameSign.value)){
+
+    createNewUser()
+  }
+})
+
 /* -----LOG IN----- */
-const loginModal = document.querySelector('.modal-log')
-const passInputLog = document.querySelector('.login__input--pin')
-const usernameInputLog = document.querySelector('.login__input--user')
-const loginModalBtn = document.querySelector('.modal__btn-log')
-const logInBtn = document.querySelector('.authorization__log-in')
-const logModalClose = document.querySelector('.modal-log__close')
-
-let currentUser,timer
-
-logInBtn.onclick = () => {  //SHOW LOG IN MODAL
-  loginModal.style.display = 'block'
-}
-
-logModalClose.onclick = () => { //CLOSE LOG IN MODAL
-  loginModal.style.display = 'none' 
-}
-
-loginModalBtn.addEventListener('click', function(e){
+btnLogin.addEventListener('click', function(e){
   e.preventDefault()
 
-  currentUser = users.find(user => user.owner === usernameInputLog.value)
+  currentUser = users.find(user => user.owner === inputLoginUsername.value)
 
-  if(currentUser.pin === Number(passInputLog.value)){   //CHECK IS THE PASSWORD CORRECT
-    resetLogModal()
+  if(currentUser.pin === Number(inputLoginPin.value)){   //CHECK IS THE PASSWORD CORRECT
     containerApp.style.opacity = 100
     updateUI(currentUser)
     labelWelcome.innerHTML = `Welcome back, ${currentUser.owner}`
@@ -142,47 +155,10 @@ loginModalBtn.addEventListener('click', function(e){
     if(timer) clearInterval(timer)
     timer = logoutTimer()
   }else{
-    passInputLog.classList.add('input--wrong')
-    usernameInputLog.classList.add('input--wrong')
+    inputLoginPin.classList.add('input--wrong')
+    inputLoginUsername.classList.add('input--wrong')
   }
 })
-
-function resetLogModal(){
-  passInputLog.classList.remove('input--wrong')
-  usernameInputLog.classList.remove('input--wrong')
-  passInputLog.value = ''
-  usernameInputLog.value = ''
-  loginModal.style.display = 'none'
-}
-/////////////////////////////////////////////////
-// Elements
-const labelWelcome = document.querySelector('.welcome');
-const labelDate = document.querySelector('.date');
-const labelBalance = document.querySelector('.balance__value');
-const labelSumIn = document.querySelector('.summary__value--in');
-const labelSumOut = document.querySelector('.summary__value--out');
-const labelSumInterest = document.querySelector('.summary__value--interest');
-const labelTimer = document.querySelector('.timer');
-
-const containerApp = document.querySelector('.app');
-const containerMovements = document.querySelector('.movements');
-
-const btnLogin = document.querySelector('.login__btn');
-const btnTransfer = document.querySelector('.form__btn--transfer');
-const btnLoan = document.querySelector('.form__btn--loan');
-const btnClose = document.querySelector('.form__btn--close');
-const btnSort = document.querySelector('.btn--sort');
-
-const inputLoginUsername = document.querySelector('.login__input--user');
-const inputLoginPin = document.querySelector('.login__input--pin');
-const inputTransferTo = document.querySelector('.form__input--to');
-const inputTransferAmount = document.querySelector('.form__input--amount');
-const inputLoanAmount = document.querySelector('.form__input--loan-amount');
-const inputCloseUsername = document.querySelector('.form__input--user');
-const inputClosePin = document.querySelector('.form__input--pin');
-
-/////////////////////////////////////////////////
-// Functions
 
 const logoutTimer = function () {
   const tick = function () {

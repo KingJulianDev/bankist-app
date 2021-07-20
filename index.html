@@ -19,9 +19,23 @@
     <nav>
       <p class="welcome">Log in to get started</p>
       <img src="logo.png" alt="Logo" class="logo" />
-      <div class="nav__authorization">
-        <div class="authorization__log-in authorization__btn">Log in</div>
-        <div class="authorization__sign-in authorization__btn">Sign in</div>
+      <div class="login-signin">
+        <form class="login">
+          <input
+            type="text"
+            placeholder="user"
+            class="login__input login__input--user"
+          />
+          <input
+            type="password"
+            placeholder="PIN"
+            maxlength="4"
+            class="login__input login__input--pin"
+          />
+          <button class="arr-btn login__btn">&rarr;</button>
+        </br>
+        </form>
+        <p class="signin-modal"><a href="#">Or sign in right now</a></p>
       </div>
     </nav>
 
@@ -96,24 +110,6 @@
     </main>
 
     <!-- MODALS -->
-    <div class="modal-log">
-      <div class="modal-log__close">X</div>
-      <form class="modal__login">
-        <input
-          type="text"
-          placeholder="user"
-          class="form__input form__input-modal login__input--user"
-        />
-        <input
-          type="password"
-          placeholder="PIN"
-          maxlength="4"
-          class="form__input form__input-modal login__input--pin"
-        />
-        <button class="modal__btn modal__btn-log">&rarr;</button>
-      </form>
-    </div>
-
     <div class="modal-sign">
       <div class="modal-sign__close">X</div>
       <form class="modal__signin">
@@ -134,7 +130,7 @@
           maxlength="4"
           class="form__input form__input-modal signin__input--pin-confirm"
         />
-        <button class="modal__btn modal__btn-sign">&rarr;</button>
+        <button class="arr-btn modal__btn-sign">&rarr;</button>
       </form>
     </div>
 
