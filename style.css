@@ -67,6 +67,10 @@ a{
   transition: all 0.3s;
 }
 
+.input--wrong{
+  border: 1px solid red !important
+}
+
 .login__input:focus {
   outline: none;
   border: 1px solid #ccc;

@@ -63,9 +63,7 @@ function resetSignModal(){
   inputPassSign.classList.remove('input--wrong')
   inputConfirmPass.classList.remove('input--wrong')
   inputUsernameSign.classList.remove('input--wrong')
-  inputPassSign.value = ''
-  inputConfirmPass.value = ''
-  inputUsernameSign.value = ''
+  inputPassSign.value = inputConfirmPass.value = inputUsernameSign.value = ''
   signinModal.style.display = 'none'
 }
 
@@ -150,6 +148,9 @@ btnLogin.addEventListener('click', function(e){
     updateUI(currentUser)
     labelWelcome.innerHTML = `Welcome back, ${currentUser.owner}`
     labelDate.innerHTML = new Intl.DateTimeFormat(currentUser.locale).format(new Date())
+
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
 
     //CLEAR INTERVAL IF IT EXISTS
     if(timer) clearInterval(timer)
